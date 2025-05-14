@@ -6,7 +6,7 @@ import numpy as np
 model = joblib.load("modelo_genero.pkl")
 
 # Caminho da imagem nova a prever
-image_path = "exemplo.jpeg"  # muda para a imagem que quiseres testar
+image_path = "joseDepois.jpg"  # muda para a imagem que quiseres testar
 
 # Ler imagem
 img = cv2.imread(image_path)
