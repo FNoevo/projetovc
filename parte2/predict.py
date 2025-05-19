@@ -5,25 +5,51 @@ import numpy as np
 # Carregar modelo
 model = joblib.load("modelo_genero.pkl")
 
-# Caminho da imagem nova a prever
-image_path = "joseDepois.jpg"  # muda para a imagem que quiseres testar
-
-# Ler imagem
-img = cv2.imread(image_path)
-if img is None:
-    print("Erro: imagem não encontrada.")
+# Iniciar webcam
+cap = cv2.VideoCapture(0)
+if not cap.isOpened():
+    print("Erro: não foi possível aceder à câmara.")
     exit()
 
-# Pré-processamento
-img = cv2.resize(img, (64, 64))
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-flat = gray.flatten().reshape(1, -1)
+print("🟢 Câmara iniciada. Pressiona [ESPAÇO] para prever ou [Q] para sair.")
 
-# Previsão
-pred = model.predict(flat)[0]
-prob = model.predict_proba(flat)[0]
+# Variável para guardar o último resultado
+last_prediction = ""
 
-label = "Homem" if pred == 0 else "Mulher"
-conf = max(prob) * 100
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        print("Erro ao capturar imagem da câmara.")
+        break
 
-print(f"✅ Resultado: {label} ({conf:.2f}% de confiança)")
+    # Mostrar a última previsão na imagem
+    if last_prediction:
+        cv2.putText(frame, last_prediction, (10, 30), cv2.FONT_HERSHEY_SIMPLEX,
+                    1, (0, 255, 0), 2, cv2.LINE_AA)
+
+    # Mostrar frame com texto
+    cv2.imshow("Webcam - Pressiona [ESPAÇO] para prever ou [Q] para sair", frame)
+
+    key = cv2.waitKey(1) & 0xFF
+
+    # Se pressionar ESPAÇO, faz previsão
+    if key == 32:  # Tecla ESPAÇO
+        img = cv2.resize(frame, (64, 64))
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        flat = gray.flatten().reshape(1, -1)
+
+        pred = model.predict(flat)[0]
+        prob = model.predict_proba(flat)[0]
+
+        label = "Homem" if pred == 0 else "Mulher"
+        conf = max(prob) * 100
+        last_prediction = f"{label} ({conf:.2f}%)"
+
+        print(f"✅ Resultado: {last_prediction}")
+
+    # Se pressionar Q, sai
+    elif key == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
