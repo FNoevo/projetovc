@@ -1,7 +1,7 @@
 import cv2
 import os
 
-input_folder = "imagens"
+input_folder = "../imagens"
 output_folder = "resultados/pixel_transform"
 os.makedirs(output_folder, exist_ok=True)
 

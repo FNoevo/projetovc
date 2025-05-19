@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import os
 
-input_folder = "imagens"
+input_folder = "../imagens"
 output_folder = "resultados/enhancement"
 os.makedirs(output_folder, exist_ok=True)
 
