@@ -3,7 +3,7 @@ import joblib
 import numpy as np
 
 # Carregar modelo
-model = joblib.load("modelo_genero.pkl")
+model = joblib.load("modelo_genero_rf_grid.pkl")
 
 # Iniciar webcam
 cap = cv2.VideoCapture(0)
