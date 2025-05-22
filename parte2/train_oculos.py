@@ -21,7 +21,7 @@ for _, row in tqdm(df.iterrows(), total=len(df)):
     nome_img = row["image_id"]
 
     # Corrigir caminho completo
-    img_path = os.path.join("data", "dataceleba", "archive", "img_align_celeba", nome_img)
+    img_path = os.path.join(IMG_DIR, nome_img)
     img_path = os.path.normpath(img_path)
 
     if not os.path.exists(img_path):
